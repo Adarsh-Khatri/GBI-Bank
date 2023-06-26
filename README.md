@@ -35,3 +35,12 @@ server Branch:
 1. contains the Backend Code build using Node.js and Express.js
 2. Hosted on Render : https://gbi-bank-ucw3.onrender.com
 
+
+Credentials:
+Manager: Username - Daniel and Password - dan1234
+Customer: Username - Apoorv and Password - apoorv123
+Customer: Username - Kabir and Password - kabir123
+
+You Can check all credentials here: - ![image](https://github.com/Adarsh-Khatri/GBI-Bank/assets/117830341/8576b35f-12b5-4029-9aae-2d9b98d596c6) just use the name and password.
+
+
