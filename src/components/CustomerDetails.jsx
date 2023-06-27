@@ -28,7 +28,6 @@ export default class AddEmployee extends Component {
 
     handleChange = ({ target }) => {
         const { name, value } = target;
-        console.log('name: ', name);
         this.handleValidate(target);
         this.setState((prevState) => ({
             form: { ...prevState.form, [name]: value }
@@ -36,9 +35,11 @@ export default class AddEmployee extends Component {
     };
 
     postData = async (url, obj) => {
+        let { user } = this.props;
         try {
             await post(url, obj);
-            this.props.history.push("/admin");
+            alert(`${user.name} Details Added Successfully`)
+            this.props.history.push("/customer");
         } catch (error) {
             console.log('Error:', error);
         }
@@ -66,20 +67,23 @@ export default class AddEmployee extends Component {
 
     detailsOrNot = ({ gender, dob, PAN, addressLine1, state, city }) => (gender && dob && PAN && addressLine1 && state && city)
 
-    
-        // -------------------------------------------------------------VALIDATING ERRORS
-    
-    
-        handleValidate = ({ name, value }) => {
-            let s1 = { ...this.state };
-            switch (name) {
-                case 'gender':
-                    s1.errors.gender = this.validateGender(value);
-                    break;
-                case 'PAN':
-                    s1.errors.PAN = this.validatePAN(value);
-                    break;
-    case 'year':
+
+    // -------------------------------------------------------------VALIDATING ERRORS
+
+
+    handleValidate = ({ name, value }) => {
+        let s1 = { ...this.state };
+        switch (name) {
+            case 'gender':
+                s1.errors.gender = this.validateGender(value);
+                break;
+            case 'PAN':
+                s1.errors.PAN = this.validatePAN(value);
+                break;
+            case 'addressLine1':
+                s1.errors.addressLine1 = this.validateAddressLine1(value);
+                break;
+            case 'year':
                 s1.errors.year = this.validateYear(value);
                 break;
             case 'month':
@@ -118,6 +122,7 @@ export default class AddEmployee extends Component {
         const errors = {};
         errors.gender = this.validateGender(gender);
         errors.PAN = this.validatePAN(PAN);
+        errors.addressLine1 = this.validateAddressLine1(addressLine1);
         errors.year = this.validateYear(year);
         errors.month = this.validateMonth(month);
         errors.day = this.validateDay(day);
@@ -130,6 +135,8 @@ export default class AddEmployee extends Component {
     validateGender = (gender) => !gender ? 'Gender is Required' : '';
 
     validatePAN = (PAN) => !PAN ? 'PAN is Required' : PAN.length < 4 ? 'PAN should have atleast 4 characters' : '';
+
+    validateAddressLine1 = (addressLine1) => !addressLine1 ? 'Address Line 1 is Required' : addressLine1.length < 5 ? 'Address Line 1 should have atleast 5 characters' : '';
 
     validateYear = (year) => !year ? 'Year is Required' : '';
 
@@ -321,7 +328,7 @@ export default class AddEmployee extends Component {
                                         required
                                     />
                                     {errors.addressLine1 && (
-                                        <div className="text-center text-danger fw-bold">{errors.addressLine1}</div>
+                                        <div className="text-center alert alert-danger fw-bold" role='alert'>{errors.addressLine1}</div>
                                     )}
                                 </div>
                             </div>
@@ -338,7 +345,7 @@ export default class AddEmployee extends Component {
                                         required
                                     />
                                     {errors.addressLine2 && (
-                                        <div className="text-center text-danger fw-bold">{errors.addressLine2}</div>
+                                        <div className="text-center alert alert-danger fw-bold" role='alert'>{errors.addressLine2}</div>
                                     )}
                                 </div>
                             </div>

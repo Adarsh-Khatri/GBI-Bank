@@ -3,7 +3,7 @@ import { get, post } from '../services/HttpService.jsx'
 
 export default class NomineeDetails extends Component {
     state = {
-        form: { gender: '', dob: '', nomineeName: '', relationship: '', jointsignatory: '', year: '', month: '', day: '' },
+        form: { gender: '', dob: '', nomineeName: '', relationship: '', jointsignatory: false, year: '', month: '', day: '' },
         errors: {},
         detailsStatus: true
     };
@@ -12,6 +12,7 @@ export default class NomineeDetails extends Component {
     fetchData = async () => {
         let { user } = this.props;
         let customer = await get(`/getNominee/${user.name}`);
+        console.log(customer.data);
         if (this.detailsOrNot(customer.data)) {
             this.setState({ detailsStatus: false })
         } else {
@@ -26,16 +27,21 @@ export default class NomineeDetails extends Component {
 
     handleChange = ({ target }) => {
         const { name, value, type, checked } = target;
+        console.log(checked);
         this.handleValidate(target)
         this.setState((prevState) => ({
             form: { ...prevState.form, [name]: type === 'checkbox' ? checked : value }
         }));
+        console.log(this.state.form);
     };
 
     postData = async (url, obj) => {
+        let { user } = this.props;
+        let { nomineeName } = this.state.form;
         try {
             await post(url, obj);
-            this.props.history.push("/admin");
+            alert(`${user.name} Your Nominee :: ${nomineeName}`)
+            this.props.history.push("/customer");
         } catch (error) {
             console.log('Error:', error);
         }
@@ -51,9 +57,8 @@ export default class NomineeDetails extends Component {
         let { user } = this.props;
         let errors = this.validateAll();
         if (this.isValid(errors)) {
-            this.postData(`/nomineeDetails`, { "name": user.name, nomineeName, gender, dob: this.formatDate(day, month, year), relationship, jointsignatory })
+            this.postData(`/nomineeDetails`, { name: user.name, nomineeName, jointsignatory, relationship, gender, dob: this.formatDate(day, month, year) })
         } else {
-            console.log('posting error');
             let s1 = { ...this.state };
             s1.errors = errors;
             this.setState(s1);
@@ -90,7 +95,6 @@ export default class NomineeDetails extends Component {
             default:
                 break;
         }
-        console.log(s1.errors);
         this.setState(s1);
     }
 
@@ -310,7 +314,7 @@ export default class NomineeDetails extends Component {
                         </div>
                         <div className="form-check row">
                             <div className="col-sm-2">
-                                <input type="checkbox" className='form-check-input' id='jointsignatory' name='jointsignatory' checked={jointsignatory} onChange={this.handleChange} />
+                                <input type="checkbox" className='form-check-input' id='jointsignatory' value={jointsignatory} name='jointsignatory' checked={jointsignatory} onChange={this.handleChange} />
                                 <label htmlFor="jointsignatory" className='form-check-label'>Joint Signatory</label>
                             </div>
                         </div>

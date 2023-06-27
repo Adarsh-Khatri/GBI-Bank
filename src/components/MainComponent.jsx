@@ -36,7 +36,6 @@ export default class MainComponent extends Component {
 
                     <Route path="/allNet" render={props => user ? user.role === 'manager' ? <AllNet {...props} user={user} /> : <Redirect to="notfound" /> : <Redirect to="login" />} />
 
-
                     <Route path="/viewCheque" render={props => <ViewCheque {...props} user={user} />} />
 
                     <Route path="/viewNet" render={props => <ViewNet {...props} user={user} />} />
